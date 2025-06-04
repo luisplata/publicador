@@ -45,6 +45,9 @@
         <li class="nav-item" role="presentation">
             <button class="nav-link" id="otro-tab" data-bs-toggle="tab" data-bs-target="#otro" type="button" role="tab" aria-controls="otro" aria-selected="false">Otro Formulario</button>
         </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="grupos-tab" data-bs-toggle="tab" data-bs-target="#grupos" type="button" role="tab" aria-controls="grupos" aria-selected="false">Grupos</button>
+        </li>
     </ul>
 
     <!-- Tab panes -->
@@ -101,6 +104,33 @@
                 <button type="submit" class="btn btn-success">Enviar</button>
             </form>
         </div>
+
+                <!-- Grupos Tab -->
+        <div class="tab-pane fade" id="grupos" role="tabpanel" aria-labelledby="grupos-tab">
+            <form id="formulario-grupo" class="mb-3">
+                <div class="mb-3">
+                    <label class="form-label">Chat ID:</label>
+                    <input type="number" class="form-control" name="chat_id" required />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Título:</label>
+                    <input type="text" class="form-control" name="title" required />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Tipo:</label>
+                    <select class="form-select" name="type" required>
+                        <option value="group">Grupo</option>
+                        <option value="channel">Canal</option>
+                        <option value="user">Usuario</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Agregar Grupo</button>
+            </form>
+
+            <h5>Grupos registrados</h5>
+            <ul id="lista-grupos" class="list-group"></ul>
+        </div>
+
     </div>
 </div>
 
@@ -249,6 +279,81 @@
         alert(json.message || 'Datos enviados');
     });
 
+</script>
+<script>
+    async function cargarGrupos() {
+        const token = getTokenGlobal();
+        if (!token) return;
+
+        const res = await fetch('/api/chats', {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        const json = await res.json();
+        const lista = document.getElementById('lista-grupos');
+        lista.innerHTML = '';
+
+        json.forEach(chat => {
+            const item = document.createElement('li');
+            item.className = 'list-group-item d-flex justify-content-between align-items-center';
+            item.innerHTML = `
+                <span><strong>${chat.title}</strong> (${chat.type}) — ID: ${chat.chat_id}</span>
+                <button class="btn btn-sm btn-danger" onclick="eliminarGrupo(${chat.id})">Eliminar</button>
+            `;
+            lista.appendChild(item);
+        });
+    }
+
+    async function eliminarGrupo(id) {
+        const token = getTokenGlobal();
+        if (!token) return;
+
+        if (!confirm('¿Estás seguro de eliminar este grupo?')) return;
+
+        const res = await fetch(`/api/chats/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        const json = await res.json();
+        alert(json.message || 'Grupo eliminado');
+        await cargarGrupos();
+    }
+
+    document.getElementById('formulario-grupo').addEventListener('submit', async function (e) {
+        e.preventDefault();
+
+        const token = getTokenGlobal();
+        if (!token) return;
+
+        const formData = new FormData(e.target);
+        const data = {
+            chat_id: parseInt(formData.get('chat_id')),
+            title: formData.get('title'),
+            type: formData.get('type')
+        };
+
+        const res = await fetch('/api/chats', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify(data)
+        });
+
+        const json = await res.json();
+        alert(json.message || 'Grupo agregado');
+        e.target.reset();
+        await cargarGrupos();
+    });
+
+    // Cargar grupos al cambiar al tab "Grupos"
+    document.getElementById('grupos-tab').addEventListener('click', cargarGrupos);
 </script>
 
 </body>
