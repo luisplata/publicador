@@ -12,3 +12,4 @@ datos:
 imagen
 https://i.ibb.co/vxnB3ksF/Abigaiilmorris-converted.jpg
 
+mirar que publique donde tenga los permisos de admin, sin guardar nada solo de la informacion del bot

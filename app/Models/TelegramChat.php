@@ -11,4 +11,6 @@ class TelegramChat extends Model
         'title',
         'type',
     ];
+
+    protected $table = 'telegram_chats';
 }
