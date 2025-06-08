@@ -15,7 +15,7 @@ class ChatController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'chat_id' => 'required|string|unique:telegram_chats,chat_id',
+            'chat_id' => 'required|integer|unique:telegram_chats,chat_id',
             'title' => 'required|string|max:255',
             'type' => 'required|string|in:group,channel,user',
         ]);
