@@ -8,7 +8,7 @@ return new class extends Migration {
     public function up()
     {
         Schema::table('telegram_chats', function (Blueprint $table) {
-            $table->unsignedBigInteger('chat_id')->change();
+            $table->string('chat_id', 40)->change();
         });
     }
 
