@@ -79,6 +79,7 @@ class ProcesarPublicacion implements ShouldQueue
             }
 
             foreach ($canales as $canal) {
+                \Log::info("Publicando en {$canal->chat_id}: $texto");
                 $params = [
                     'chat_id' => $canal->chat_id,
                     'parse_mode' => 'HTML',
@@ -97,7 +98,7 @@ class ProcesarPublicacion implements ShouldQueue
                     \Telegram::sendMessage($params);
                 }
 
-                \Log::info("Publicando en {$canal->chat_id}: $texto");
+                \Log::info("Publicado en {$canal->chat_id}: $texto");
             }
         } catch (\Exception $e) {
             \Log::error('Error enviando mensaje a Telegram: ' . $e->getMessage());
