@@ -101,7 +101,11 @@
                         <input type="text" class="form-control" id="nombre" name="nombre" required
                             placeholder="Ingresa el nombre" />
                     </div>
-
+                    <div class="mb-3">
+                        <label for="imagen_otro" class="form-label">URL de la imagen (opcional):</label>
+                        <input type="url" class="form-control" id="imagen_otro" name="imagen_otro"
+                            placeholder="https://ejemplo.com/imagen.jpg" />
+                    </div>
                     <div class="mb-3">
                         <label for="link" class="form-label">Link:</label>
                         <input type="url" class="form-control" id="link" name="link" required
@@ -264,6 +268,7 @@
             const nombre = e.target.nombre.value.trim();
             const link = e.target.link.value.trim();
             const tags = e.target.tags.value.trim();
+            const imagen = e.target.imagen_otro.value.trim();
 
             if (!nombre || !link) {
                 alert('Por favor completa los campos Nombre y Link.');
@@ -276,6 +281,9 @@
                 data.tags = tags.split(',').map(t => t.trim()).filter(t => t.length > 0); // array!
             }
 
+            if (imagen) {
+                data.image = imagen;
+            }
 
             const res = await fetch('/api/publicar', {
                 method: 'POST',

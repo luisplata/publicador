@@ -14,6 +14,7 @@ class WebhookController extends Controller
         $data = $request->validate([
             'nombre' => 'sometimes|required|string',
             'link' => 'sometimes|required|url',
+            'image' => 'sometimes|required|url',
             'tags' => 'sometimes|array',
             'tags.*' => 'string',
         ]);
@@ -23,6 +24,7 @@ class WebhookController extends Controller
                 'nombre' => $data['nombre'] ?? 'Slime',
                 'link' => $data['link'] ?? '',
                 'tags' => $data['tags'] ?? [],
+                'image' => $data['image'] ?? '',
             ]);
 
             Log::info('Job ProcesarPublicacion despachado correctamente.');

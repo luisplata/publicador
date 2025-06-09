@@ -28,6 +28,7 @@ class ProcesarPublicacion implements ShouldQueue
         $nombre = $this->data['nombre'] ?? 'Slime';
         $link = $this->data['link'] ?? '';
         $tags = $this->data['tags'] ?? [];
+        $imagen = $this->data['image'] ?? '';
 
         try {
             $mensaje = \App\Models\Mensaje::latest()->first();
@@ -47,8 +48,6 @@ class ProcesarPublicacion implements ShouldQueue
                 [$nombre, $link, $tagsTexto],
                 $texto
             );
-
-            $imagen = $mensaje->imagen ?? null;
 
             // Botones opcionales desde los tags
             $botones = [];
